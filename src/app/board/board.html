@@ -1,0 +1,9 @@
+<div class="board">
+  @for (row of sudokuLogic.playableBoard(); track $index; let rowIndex = $index) {
+    @for (cell of row; track $index; let colIndex = $index) {
+      <input type="text" maxlength="1"
+             [value]="cell === 0 ? '' : cell"
+             [disabled]="sudokuLogic.startingBoard[rowIndex][colIndex] === 0 ? 0 : 1" class="cell" (input)="onInput(rowIndex, colIndex, $event)">
+    }
+  }
+</div>
