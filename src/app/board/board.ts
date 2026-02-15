@@ -16,8 +16,10 @@ export class Board {
     if (isNaN(value) || value < 1 || value > 9) {
       this.sudokuLogic.setCell(rowIndex, colIndex, 0);
       element.value = '';
+      element.style.backgroundColor = 'white';
     } else {
       this.sudokuLogic.setCell(rowIndex, colIndex, value);
+      element.style.backgroundColor = this.sudokuLogic.checkField(rowIndex, colIndex) ? 'white' : 'red';
     }
   }
 }
