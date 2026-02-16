@@ -3,7 +3,11 @@
     @for (cell of row; track $index; let colIndex = $index) {
       <input type="text" maxlength="1"
              [value]="cell === 0 ? '' : cell"
-             [disabled]="sudokuLogic.startingBoard[rowIndex][colIndex] === 0 ? 0 : 1" class="cell" (input)="onInput(rowIndex, colIndex, $event)">
+             [disabled]="sudokuLogic.startingBoard[rowIndex][colIndex] === 0 ? 0 : 1"
+             class="cell"
+             (input)="onInput(rowIndex, colIndex, $event)"
+             [style.background-color]="cell === 0 || sudokuLogic.checkField(rowIndex, colIndex) ? 'white' : 'red'" ]>
     }
   }
+  <button (click)="onSolveClick()">Rozwiąż sudoku</button>
 </div>

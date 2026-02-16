@@ -19,9 +19,10 @@ export class SudokuLogic {
   playableBoard = signal(structuredClone(this.startingBoard));
 
   setCell(row: number, col: number, value: number): void {
-    const newBoard = this.playableBoard();//.map(row => [...row]);
-    newBoard[row][col] = value;
-    this.playableBoard.set(newBoard);
+    this.playableBoard.update(board => {
+      board[row][col] = value;
+      return [...board];
+    });
   }
 
   checkField(row: number, col: number): boolean {
@@ -40,6 +41,25 @@ export class SudokuLogic {
     return true;
   }
 
+  async autoFill(row: number, col: number): Promise<boolean> {
+    if (row > 8) return true;
+    if (col > 8) return await this.autoFill(row + 1, 0);
+    if (this.startingBoard[row][col] !== 0) return await this.autoFill(row, col + 1);
+
+    for (let i = 1; i <= 9; i++) {
+      this.setCell(row, col, i);
+      await this.sleep(5);
+
+      if (this.checkField(row, col)) {
+        if (await this.autoFill(row, col + 1)) {
+          return true;
+        }
+      }
+      this.setCell(row, col, 0);
+    }
+    return false;
+  }
+
   private findSquareDirections(row: number, col: number): [number, number][] {
     const rowMod = row % 3;
     const colMod = col % 3;
@@ -54,4 +74,6 @@ export class SudokuLogic {
     if (rowMod === 2 && colMod === 2) return [[-1,-1],[-1,-2],[-2,-1],[-2,-2]];
     return [[0,0]];
   }
+
+  private sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 }
